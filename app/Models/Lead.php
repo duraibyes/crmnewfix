@@ -30,7 +30,10 @@ class Lead extends Model implements Auditable
         'visible_to',
         'status',
         'added_by',
-        'updated_by'
+        'updated_by',
+        'mobile_no',
+        'email',
+        'city'
     ];
 
     protected static function booted()

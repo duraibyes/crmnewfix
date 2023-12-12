@@ -421,16 +421,17 @@ function cus_auto_operand(id, query, type = '') {
     $.ajax({
         url: "{{ route('autocomplete_customer_save', $companyCode) }}",
         method:'POST',
-        data: {query:query, id:id, type:type},
+        data: {query,id,type},
         success:function(response){
             if( response.name ) {
                 $('#customer').val(response.name);
                 $('#customer_id').val(response.id);
                 $('#result').hide();
-                if(response.company) {
-                    $('#organization').val(response.company);
-                    $('#organization_id').val(response.company_id);
-                }
+                
+                $('#mobile_no').val(response.mobile_no);
+                $('#email').val(response.email);
+                $('#city').val(response.city);
+                
             }
         }      
     });

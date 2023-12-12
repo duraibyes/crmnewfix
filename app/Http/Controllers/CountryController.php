@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use App\Models\Country;
+use Illuminate\Validation\Rule;
 
 class CountryController extends Controller
 {
@@ -113,14 +114,28 @@ class CountryController extends Controller
     public function save(Request $request)
     {
         $id = $request->id;
-
+        $company_id = auth()->user()->company_id ?? '';
         if (isset($id) && !empty($id)) {
-            $role_validator   = [
-                'country_name'      => ['required', 'string', 'max:255', 'unique:countries,country_name,' . $id],
+            $role_validator = [
+                'country_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('countries', 'country_name')->where(function ($query) use ($company_id, $id) {
+                        return $query->where('company_id', $company_id)->where('id', '<>', $id);
+                    }),
+                ],
             ];
         } else {
-            $role_validator   = [
-                'country_name'      => ['required', 'string', 'max:255', 'unique:countries,country_name'],
+            $role_validator = [
+                'country_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('countries', 'country_name')->where(function ($query) use ($company_id) {
+                        return $query->where('company_id', $company_id);
+                    }),
+                ],
             ];
         }
         //Validate the product

@@ -300,6 +300,10 @@ class CustomerController extends Controller
             $params['name'] = $query;
             $params['id'] = $id;
             $params['company_id'] = $info->organization_id;
+            $params['first_name'] = $info->first_name;
+            $params['email'] = $info->email;
+            $params['mobile_no'] = $info->mobile_no;
+            $params['city'] = $info->address;
             $params['company'] = $info->company->name ?? '';
         } else {
             $info = Customer::find($id);
@@ -307,6 +311,10 @@ class CustomerController extends Controller
             $params['id'] = $info->id;
             $params['company_id'] = $info->organization_id;
             $params['company'] = $info->company->name ?? '';
+            $params['first_name'] = $info->first_name;
+            $params['email'] = $info->email;
+            $params['mobile_no'] = $info->mobile_no;
+            $params['city'] = $info->address;
         }
         return response()->json($params);
     }

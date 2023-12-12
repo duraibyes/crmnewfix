@@ -4,42 +4,27 @@
         <div class="modal-header px-3" id="myLargeModalLabel">{{ $modal_title }}</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div> 
-        <div class="modal-body d-flex justify-content-center h-100 px-3">
+        <div class="modal-body d-flex justify-content-center h-100 p-3">
             <div class="w-100">
                 <div class="row">
                     <div class="col-12" id="error"></div>
                 </div>
                 <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <span><i class="dripicons-user"></i></span>
-                            <label for="name" class="col-form-label">Customer Name <span class="text-danger">*</span></label>                   
-                            <input type="text" name="customer" id="customer" class="form-control" required value="{{ $info->customer->first_name ?? '' }}" autocomplete="off">
-                            <input type="hidden" name="customer_id" id="customer_id" value="{{ $info->customer_id ?? '' }}">
-                            <div id="result" class="typeahead-custom"></div>
-                        </div> 
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group ">
-                            <label for="name" class="col-form-label"> Mobile No <span class="text-danger">*</span></label>                   
-                            <input type="text" name="mobile_no" id="mobile_no" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group mt-1">
-                            <label for="name" class="col-form-label">Email <span class="text-danger">*</span></label>                   
-                            <input type="email" name="email" id="email" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group mt-1">
-                            <label for="name" class="col-form-label"> City <span class="text-danger">*</span></label>                   
-                            <input type="text" name="city" id="city" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
-                        </div>
-                    </div>
-
+                    <div class="form-group">
+                        <span><i class="dripicons-user"></i></span>
+                        <label for="name" class="col-form-label">Customer </label>                   
+                        <input type="text" name="customer" id="customer" class="form-control" required value="{{ $info->customer->first_name ?? '' }}" autocomplete="off">
+                        <input type="hidden" name="customer_id" id="customer_id" value="{{ $info->customer_id ?? '' }}">
+                        <div id="result" class="typeahead-custom"></div>
+                    </div> 
                     <div class="form-group mt-1">
-                        <label for="name" class="col-form-label">Title <span class="text-danger">*</span></label>                   
+                        <label for="name" class="col-form-label">Organization </label>                   
+                        <input type="text" name="organization" id="organization" value="{{ $info->customer->company->name ?? ''}}" class="form-control" autocomplete="off" required>
+                        <input type="hidden" name="organization_id" id="organization_id" value="{{ $info->customer->organization_id ?? '' }}">
+                        <div id="result-org" class="typeahead-custom"></div>
+                    </div>
+                    <div class="form-group mt-1">
+                        <label for="name" class="col-form-label">Title </label>                   
                         <input type="text" name="title" id="title" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
                     </div>
                     <div class="form-group mt-1">

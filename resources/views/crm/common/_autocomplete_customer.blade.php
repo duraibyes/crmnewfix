@@ -8,7 +8,7 @@
                 </li>
             @endforeach
         @else
-            <li > {{ $query }} &emsp;<span class="badge bg-primary"><a href="#" class="text-white" onclick="return cus_auto_operand('', '{{ $query }}')">Add New</a></span></li>
+            <li > {{ $query }} &emsp; no found </li>
         @endif
        
     </ul>

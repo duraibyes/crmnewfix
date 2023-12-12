@@ -137,6 +137,7 @@ class RoleController extends Controller
                 $role->update();
                 $success = 'Updated role';
             } else {
+                $ins['company_id'] = auth()->user()->company_id ?? '';
                 $ins['added_by'] = Auth::id();
                 Role::create($ins);
                 $success = 'Added new roles';

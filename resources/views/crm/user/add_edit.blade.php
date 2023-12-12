@@ -31,13 +31,19 @@
                             <div>
                                 <input type="text" name="email" class="form-control" id="email" placeholder="Email" value="{{ $info->email ?? '' }}" required>
                             </div>
-                        </div>
+                        </div>                        
                         
-                        @if( empty($id))
+                        @if( empty($id) || !auth()->user()->role_id )
                         <div class="mb-2">
                             <label for="password" class="col-form-label"> Password<span class="text-danger">*</span></label>
                             <div>
-                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" value="{{ $info->password ?? '' }}" required>
+                                {{-- <input type="password" name="password" class="form-control" id="password" placeholder="Password" value="{{ $info->password ?? '' }}" required> --}}
+                                <div class="input-group input-group-merge">
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password">
+                                    <div class="input-group-text" data-password="false" onclick="getViewPass()">
+                                        <span class="password-eye"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         @endif
@@ -102,6 +108,15 @@
 </div>
 
 <script>
+    function getViewPass() {
+        var pas = document.getElementById('password');
+        if( pas.type === 'password') {
+            pas.type = 'text';
+        } else {
+            pas.type = 'password';
+        }
+    }
+
         $("#users-form").validate({
             submitHandler:function(form) {
                 $.ajax({

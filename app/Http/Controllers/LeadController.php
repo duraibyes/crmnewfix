@@ -338,7 +338,7 @@ class LeadController extends Controller
         $leadsource = LeadSource::all();
         $leadtype = LeadType::all();
         if (Auth::user()->hasAccess('leads', 'is_assign') || empty(Auth::user()->role_id)) {
-            $users = User::where('status', 1)->whereNotNull('role_id')->where('company_id', auth()->user()->id)->get();
+            $users = User::where('status', 1)->whereNotNull('role_id')->where('company_id', auth()->user()->company_id)->get();
         } else if (!empty(Auth::user()->role_id)) {
             $users = User::where('status', 1)->where('id', Auth::id())->get();
         }
@@ -359,11 +359,11 @@ class LeadController extends Controller
     public function save(Request $request)
     {
         $id = $request->id;
-     
-
         $role_validator   = [
-            'customer_id'      => ['required', 'string', 'max:255'],
-            'organization_id'      => ['required', 'string', 'max:255'],
+            'customer'      => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'string', 'max:255'],
+            'mobile_no'      => ['required', 'string', 'max:255'],
+            'city'      => ['required', 'string', 'max:255'],
             'title'      => ['required', 'string', 'max:255'],
             'lead_type'      => ['required', 'string', 'max:255'],
             'lead_source'      => ['required', 'string', 'max:255'],
@@ -375,13 +375,34 @@ class LeadController extends Controller
         if ($validator->passes()) {
 
             if(hasDailyLimit('lead')) {
+                $customer_id = $request->customer_id ?? '';
+                if ($customer_id) {
+                    $customer_info = Customer::find($customer_id);
+                } else {
+                    $customer_info = Customer::where(['first_name' => $request->customer, 'email' => $request->email, 'mobile_no' => $request->mobile_no])->first();
+                    if( $customer_info ) {
+                        $customer_info->city = $request->city;
+                        $customer_info->save();
+                    } else {
+                        $cus['first_name'] = $request->customer;
+                        $cus['email'] = $request->email;
+                        $cus['mobile_no'] = $request->mobile_no;
+                        $cus['address'] = $request->city;
+                        $cus['added_by'] = Auth::id();
+
+                        $customer_id = Customer::create($cus)->id;
+                    }
+                }
 
                 $ins['status'] = isset($request->status) ? 1 : 0;
                 $ins['lead_subject'] = $request->title;
-                $ins['customer_id'] = $request->customer_id;
+                $ins['customer_id'] = $customer_id;
                 $ins['lead_type_id'] = $request->lead_type;
                 $ins['lead_source_id'] = $request->lead_source;
                 $ins['lead_value'] = $request->lead_value;
+                $ins['mobile_no'] = $request->mobile_no;
+                $ins['email'] = $request->email;
+                $ins['city'] = $request->city;
                 if ($request->assigned_to) {
                     $assigned_to = $request->assigned_to;
                     $ins['assinged_by'] = Auth::id();
@@ -404,6 +425,9 @@ class LeadController extends Controller
                     $lead->lead_type_id = $request->lead_type;
                     $lead->lead_source_id = $request->lead_source;
                     $lead->lead_value = $request->lead_value;
+                    $lead->email = $request->email;
+                    $lead->mobile_no = $request->mobile_no;
+                    $lead->city = $request->city;
                     if ($request->assigned_to) {
                         $lead->assinged_by = Auth::id();
                         $lead->assigned_to = $request->assigned_to;

@@ -27,6 +27,7 @@ class ImportCustomer implements ToModel, WithStartRow
             'dob' =>  $this->transformDate($row[2]),
             'email' => $row[3],
             'mobile_no' => $row[4],
+            'address' => $row[5] ?? '',
             'status' => 1,
             'added_by' => Auth::id(),
         ]);

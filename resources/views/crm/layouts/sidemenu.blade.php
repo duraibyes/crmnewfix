@@ -86,7 +86,7 @@
                 // print_r( $route );
             @endphp
             @if(Auth::user()->hasAccess('customers', 'is_view') || Auth::user()->hasAccess('organizations', 'is_view') || Auth::user()->hasAccess('customer_document_approval', 'is_view') )
-            <li class="side-nav-item">
+            {{-- <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarEmail" aria-expanded="@if($route=='customer_document_approval.customer.view') true @else false @endif" aria-controls="sidebarEmail" class="side-nav-link">
                     <i class="mdi mdi-account-tie"></i>
                     <span> People </span>
@@ -118,7 +118,7 @@
                         @endif
                     </ul>
                 </div>
-            </li>
+            </li> --}}
             @endif
 
             @if(Auth::user()->hasAccess('leads', 'is_view'))

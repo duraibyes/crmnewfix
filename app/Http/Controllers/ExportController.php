@@ -43,56 +43,72 @@ class ExportController extends Controller
 
     public function exportCompany(Request $request)
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new OrganizationExport(), 'organization.xlsx');
     }
 
     public function exportCustomer()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new CustomerExport(), 'customer.xlsx');
     }
 
     public function exportPage()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new PageExport(), 'pages.xlsx');
     }
 
     public function exportLead()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new LeadExport(), 'leads.xlsx');
     }
 
     public function exportLeadSource()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new LeadSourceExport(), 'leadsources.xlsx');
     }
 
     public function exportLeadStage()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new LeadStageExport(), 'leadstages.xlsx');
     }
 
     public function exportDeal()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new DealExport(), 'deals.xlsx');
     }
 
     public function exportDealStage()
     {
-        ob_end_clean(); // this
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         ob_start();
         return Excel::download(new DealStageExport(), 'dealstages.xlsx');
     }

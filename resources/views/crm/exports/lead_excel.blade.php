@@ -8,6 +8,9 @@
             <th>Lead Type</th>
             <th>Lead Source</th>
             <th>Customer</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>City</th>
             <th>Assigned To</th>
             <th>Assigned By</th>
             <th>Added By</th>
@@ -26,6 +29,9 @@
                     <td>{{ $lead->leadType->type ?? '' }}</td>
                     <td>{{ $lead->leadSource->source ?? '' }}</td>
                     <td>{{ $lead->customer->first_name ?? '' }}</td>
+                    <td>{{ $lead->mobile_no ?? '' }}</td>
+                    <td>{{ $lead->email ?? '' }}</td>
+                    <td>{{ $lead->city ?? '' }}</td>
                     <td>{{ $lead->assignedTo->name ?? '' }}</td>
                     <td>{{ $lead->assignedBy->name ?? '' }}</td>
                     <td>{{ $lead->added->name ?? '' }}</td>

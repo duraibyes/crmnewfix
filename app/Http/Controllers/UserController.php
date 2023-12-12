@@ -37,27 +37,43 @@ class UserController extends Controller
         $dir                = $request->input('order')[0]['dir'];
         $search             = $request->input('search.value');
         $approve_status     = $request->input('approve_status');
-
-        $total_list         = User::whereNotNull('role_id')->companyRelatedOnly()->count();
+        $hasOwnUser = auth()->user()->role_id ?? '';
+       
+        $total_list         = User::whereNotNull('role_id')->companyRelatedOnly()
+                                ->when($hasOwnUser, function ($query) {
+                                    return $query->where('id', '<>', auth()->user()->id);
+                                })
+                                ->count();
         
         // DB::enableQueryLog();
         if ($order != 'id') {
             $list               = User::skip($start)->take($limit)->whereNotNull('role_id')->orderBy($order, $dir)
                 ->search($search)
                 ->companyRelatedOnly()
+                ->when($hasOwnUser, function ($query) {
+                    return $query->where('id', '<>', auth()->user()->id);
+                })
                 ->get();
         } else {
             $list               = User::skip($start)->take($limit)->whereNotNull('role_id')->Latests()
                 ->search($search)
                 ->companyRelatedOnly()
+                ->when($hasOwnUser, function ($query) {
+                    return $query->where('id', '<>', auth()->user()->id);
+                })
                 ->get();
         }
         // $query = DB::getQueryLog();
         if (empty($request->input('search.value'))) {
-            $total_filtered = User::whereNotNull('role_id')->companyRelatedOnly()->count();
+            $total_filtered = User::whereNotNull('role_id')->companyRelatedOnly()
+                                ->when($hasOwnUser, function ($query) {
+                                    return $query->where('id', '<>', auth()->user()->id);
+                                })->count();
         } else {
             $total_filtered = User::whereNotNull('role_id')->companyRelatedOnly()->search($search)
-                ->count();
+                                ->when($hasOwnUser, function ($query) {
+                                    return $query->where('id', '<>', auth()->user()->id);
+                                })->count();
         }
 
         $data           = array();
