@@ -22,19 +22,19 @@
                     <div class="col-6">
                         <div class="form-group ">
                             <label for="name" class="col-form-label"> Mobile No <span class="text-danger">*</span></label>                   
-                            <input type="text" name="mobile_no" id="mobile_no" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
+                            <input type="text" name="mobile_no" id="mobile_no" class="form-control" value="{{ $info->mobile_no ?? '' }}" autocomplete="off" required>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group mt-1">
                             <label for="name" class="col-form-label">Email <span class="text-danger">*</span></label>                   
-                            <input type="email" name="email" id="email" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
+                            <input type="email" name="email" id="email" class="form-control" value="{{ $info->email ?? '' }}" autocomplete="off" required>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group mt-1">
                             <label for="name" class="col-form-label"> City <span class="text-danger">*</span></label>                   
-                            <input type="text" name="city" id="city" class="form-control" value="{{ $info->lead_subject ?? '' }}" autocomplete="off" required>
+                            <input type="text" name="city" id="city" class="form-control" value="{{ $info->city ?? '' }}" autocomplete="off" required>
                         </div>
                     </div>
 

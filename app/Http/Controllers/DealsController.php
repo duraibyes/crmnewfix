@@ -168,10 +168,12 @@ class DealsController extends Controller
     public function save(Request $request)
     {
         $id = $request->id;
-
+        
         $role_validator   = [
-            'customer_id'      => ['required', 'string', 'max:255'],
-            'organization_id'      => ['required', 'string', 'max:255'],
+            'customer'      => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'string', 'max:255'],
+            'mobile_no'      => ['required', 'string', 'max:255'],
+            'city'      => ['required', 'string', 'max:255'],
             'title'      => ['required', 'string', 'max:255'],
             'deal_stage'      => ['required', 'string', 'max:255'],
             'expected_date'      => ['required', 'string', 'max:255'],
@@ -182,16 +184,38 @@ class DealsController extends Controller
 
         if ($validator->passes()) {
 
-            if(hasDailyLimit('lead')) {
+            if(hasDailyLimit('deal')) {
+
+                $customer_id = $request->customer_id ?? '';
+                if ($customer_id) {
+                    $customer_info = Customer::find($customer_id);
+                } else {
+                    $customer_info = Customer::where(['first_name' => $request->customer, 'email' => $request->email, 'mobile_no' => $request->mobile_no])->first();
+                    if( $customer_info ) {
+                        $customer_info->city = $request->city;
+                        $customer_info->save();
+                    } else {
+                        $cus['first_name'] = $request->customer;
+                        $cus['email'] = $request->email;
+                        $cus['mobile_no'] = $request->mobile_no;
+                        $cus['address'] = $request->city;
+                        $cus['added_by'] = Auth::id();
+
+                        $customer_id = Customer::create($cus)->id;
+                    }
+                }
 
                 $ins['status'] = isset($request->status) ? 1 : 0;
                 $ins['deal_title'] = $request->title;
-                $ins['customer_id'] = $request->customer_id;
+                $ins['customer_id'] = $customer_id;
                 $ins['current_stage_id'] = $request->deal_stage;
                 $ins['deal_value'] = $request->deal_value;
                 $ins['lead_id'] = $request->lead_id ?? null;
                 $ins['product_total'] = $request->total_cost ?? null;
                 $ins['expected_completed_date'] = date('Y-m-d', strtotime($request->expected_date));
+                $ins['mobile_no'] = $request->mobile_no;
+                $ins['email'] = $request->email;
+                $ins['city'] = $request->city;
                 if ($request->assigned_to) {
                     $ins['assinged_by'] = Auth::id();
                     $ins['assigned_to'] = $request->assigned_to;
@@ -216,6 +240,9 @@ class DealsController extends Controller
                     $deal->lead_id = $request->lead_id ?? null;
                     $deal->product_total = $request->total_cost ?? null;
                     $deal->expected_completed_date = date('Y-m-d', strtotime($request->expected_date));
+                    $deal->email = $request->email;
+                    $deal->mobile_no = $request->mobile_no;
+                    $deal->city = $request->city;
                     if ($request->assigned_to) {
                         $deal->assinged_by = Auth::id();
                         $deal->assigned_to = $request->assigned_to;

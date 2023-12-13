@@ -3,7 +3,7 @@
         #main-product-tab {
             height: 208px;
             overflow: auto;
-        } 
+        }
     </style>
     <form id="deals-form" method="POST" action="{{ route('deals.save', $companyCode) }}" autocomplete="off" class="modal-content h-100">
         <div class="modal-header px-3" id="myLargeModalLabel">{{ $modal_title }}</h4>
@@ -19,32 +19,19 @@
                     <input type="hidden" name="id" value="{{ $id ?? '' }}">
                     <input type="hidden" name="from" id="from" value="{{ $from ?? '' }}">
                     <input type="hidden" name="lead_id" value="{{ $lead_id ?? '' }}"> 
-                    <div class="col-6">
-                        <div class="form-group">
-                            <span><i class="dripicons-user"></i></span>
-                            <label for="name" class="col-form-label">Customer <span class="text-danger">*</span></label>                   
-                            <input type="text" name="customer" id="customer" class="form-control" required value="{{ $lead_info->customer->first_name ?? $info->customer->first_name ?? '' }}" autocomplete="off" required>
-                            <input type="hidden" name="customer_id" id="customer_id" value="{{ $lead_info->customer_id ?? $info->customer_id ?? '' }}">
-                            <div id="result" class="typeahead-custom"></div>
-                        </div>    
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group ">
-                            <label for="name" class="col-form-label"> Mobile No <span class="text-danger">*</span></label>                   
-                            <input type="text" name="mobile_no" id="mobile_no" class="form-control" value="{{ $info->mobile_no ?? '' }}" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group mt-1">
-                            <label for="name" class="col-form-label">Email <span class="text-danger">*</span></label>                   
-                            <input type="email" name="email" id="email" class="form-control" value="{{ $info->email ?? '' }}" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group mt-1">
-                            <label for="name" class="col-form-label"> City <span class="text-danger">*</span></label>                   
-                            <input type="text" name="city" id="city" class="form-control" value="{{ $info->city ?? '' }}" autocomplete="off" required>
-                        </div>
+                    <div class="form-group">
+                        <span><i class="dripicons-user"></i></span>
+                        <label for="name" class="col-form-label">Customer <span class="text-danger">*</span></label>                   
+                        <input type="text" name="customer" id="customer" class="form-control" required value="{{ $lead_info->customer->first_name ?? $info->customer->first_name ?? '' }}" autocomplete="off" required>
+                        <input type="hidden" name="customer_id" id="customer_id" value="{{ $lead_info->customer_id ?? $info->customer_id ?? '' }}">
+                        <div id="result" class="typeahead-custom"></div>
+                    </div>    
+                    
+                    <div class="form-group mt-2">
+                        <label for="name" class="col-form-label">Organization </label>                   
+                        <input type="text" name="organization" id="organization" value="{{ $lead_info->customer->company->name ?? $info->customer->company->name ?? '' }}" class="form-control" autocomplete="off" required>
+                        <input type="hidden" name="organization_id" id="organization_id" value="{{ $lead_info->customer->organization_id ?? $info->customer->organization_id ?? '' }}">
+                        <div id="result-org" class="typeahead-custom"></div>
                     </div>
                     <div class="col-6 form-group mt-2">
                         <label for="name" class="col-form-label">Title </label>                   

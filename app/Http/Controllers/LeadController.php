@@ -368,7 +368,6 @@ class LeadController extends Controller
             'lead_type'      => ['required', 'string', 'max:255'],
             'lead_source'      => ['required', 'string', 'max:255'],
         ];
-
         //Validate the product
         $validator                     = Validator::make($request->all(), $role_validator);
 

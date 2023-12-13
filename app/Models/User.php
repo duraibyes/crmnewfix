@@ -135,23 +135,22 @@ class User extends Authenticatable implements Auditable
                 ->where('company_subscriptions.status', 1)
                 ->where('company_id', auth()->user()->company_id)
                 ->first();
+            
             if( isset($info) && !empty($info)) {
                 $count = $info->$column ?? 0;
-                
                 if( $module == 'dealstages') {
-                    $usedCount = DealStage::count();
+                    $usedCount = DealStage::where('company_id', auth()->user()->company_id)->count();
                 } else if( $module == 'users' ) {
-                    $usedCount = User::count();
+                    $usedCount = User::where('company_id', auth()->user()->company_id)->count();
                 } else if( $module == 'customers' ) {
-                    $usedCount = Customer::count();
+                    $usedCount = Customer::where('company_id', auth()->user()->company_id)->count();
                 } else if( $module == 'deals' ) {
-                    $usedCount = Deal::count();
+                    $usedCount = Deal::where('company_id', auth()->user()->company_id)->count();
                 } else if( $module == 'pages' ) {
-                    $usedCount = LandingPages::count();
+                    $usedCount = LandingPages::where('company_id', auth()->user()->company_id)->count();
                 } else if( $module == 'products' ) {
-                    $usedCount = Product::count();
+                    $usedCount = Product::where('company_id', auth()->user()->company_id)->count();
                 }
-
                 if( $count > $usedCount ) {
                     return true;
                 } else {

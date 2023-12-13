@@ -34,6 +34,9 @@ class Deal extends Model implements Auditable
         'updated_by',
         'won_at',
         'loss_at',
+        'mobile_no',
+        'email',
+        'city'
     ];
 
     protected static function booted()
