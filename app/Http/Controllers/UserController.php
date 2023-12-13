@@ -150,7 +150,7 @@ class UserController extends Controller
             $role_validator   = [
                 'name' => ['required', 'string', 'max:255'],
                 'email'      => ['required', 'email', 'string', 'max:255', 'unique:roles,role,NULL,id,company_id,'.auth()->user()->company_id],
-                'mobile_no' => ['required', 'digits:10', 'max:255'],
+                'mobile_no' => ['required', 'digits:10', 'max:255', 'unique:users,mobile_no,' . $id],
                 'password' => ['required', 'string', 'min:6'],
 
             ];

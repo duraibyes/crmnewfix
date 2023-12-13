@@ -122,7 +122,7 @@ class LeadController extends Controller
         $tab = $request->tab;
         $id = $request->lead_id;
         $info = Lead::with(['all_activity', 'notes'])->find($id);
-        $users = User::whereNotNull('role_id')->where('company_id', auth()->user()->id)->get();
+        $users = User::whereNotNull('role_id')->where('company_id', auth()->user()->company_id)->get();
         return view('crm.lead._' . $tab . '_form', ['id' => $id, 'info' => $info, 'users' => $users]);
     }
 
