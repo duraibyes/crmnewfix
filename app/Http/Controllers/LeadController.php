@@ -90,7 +90,15 @@ class LeadController extends Controller
                     }
                 }
 
+                $customer_data = '<div>'; 
+                $customer_data .= '<div><b>'.$leads->customer->first_name.' '.$leads->customer->last_name.'</b></div>';
+                $customer_data .= '<div>'.$leads->mobile_no ?? $leads->customer->mobile_no.'</div>';
+                $customer_data .= '<div>'.$leads->email ?? $leads->customer->email.'</div>';
+                $customer_data .= '<div>'.$leads->city ?? $leads->customer->address.'</div>';
+                $customer_data .= '</div>'; 
+
                 $nested_data['title']             = $leads->lead_title ?? $leads->lead_subject;
+                $nested_data['customer']          = $customer_data;
                 $nested_data['type']              = $leads->leadType->type ?? 'N/A';
                 $nested_data['source']            = $leads->leadSource->source ?? 'N/A';
                 $nested_data['created_at']        = date('d-m-Y', strtotime($leads->created_at));

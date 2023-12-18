@@ -72,7 +72,16 @@ class Lead extends Model implements Auditable
                         ->orWhere( 'lead_subject', 'like', "%{$search}%" )
                         ->orWhere( 'lead_description', 'like', "%{$search}%" )
                         ->orWhere( 'lead_value', 'like', "%{$search}%" )
-                        ->orWhere( 'assigned_at', 'like', "%{$search}%" );
+                        ->orWhere( 'mobile_no', 'like', "%{$search}%" )
+                        ->orWhere( 'email', 'like', "%{$search}%" )
+                        ->orWhere( 'city', 'like', "%{$search}%" )
+                        ->orWhere( 'assigned_at', 'like', "%{$search}%" )
+                        ->orWhereHas('customer', function ($q) use ($search) {
+                            $q->where('first_name', 'like', "%{$search}%")
+                            ->orWhere( 'last_name', 'like', "%{$search}%" )
+                            ->orWhere( 'email', 'like', "%{$search}%" )
+                            ->orWhere( 'mobile_no', 'like', "%{$search}%" );
+                        });
 
                 }); 
     }

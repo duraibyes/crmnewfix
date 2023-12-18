@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-6">
                     <label for="">Sample Customer Data Excel file </label>
-                    <span class="ml-3"> <a href="{{ asset('assets/bimport.xls') }}"> Click to Download Sample </a></span>
+                    <span class="ml-3"> <a href="{{ asset('assets/bimport.xlsx') }}"> Click to Download Sample </a></span>
                     <div class="text-danger">
                         <small>( File should be excel. Excel format should be present same as sample document, other wise file will not be import, * If data contains duplicates it will insert, please check data before import )</small>
                     </div>

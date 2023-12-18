@@ -35,6 +35,7 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th class="all">Title</th>
+                                        <th>Customer</th>
                                         <th>Lead Type</th>
                                         <th>Lead Source</th>
                                         <th>Lead Created</th>
@@ -79,6 +80,9 @@
                 },
                 "columns": [{
                         "data": "title"
+                    },
+                    {
+                        "data": "customer"
                     },
                     {
                         "data": "type"
