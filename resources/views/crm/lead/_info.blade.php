@@ -2,7 +2,9 @@
     <div class="col-md-6 mb-3">
        <h3 class="h4 link">
            <a href="#" class="me-1">{{ $info->lead_title ?? $info->lead_subject }}</a> 
+           <span class="text text-success">{{ $info->lead_no ?? '' }}</span>
            <i class="mdi mdi-tag"></i>
+           
 
            <small> Created At : {{ date('M d,Y', strtotime($info->created_at)) }} </small>
         </h3>

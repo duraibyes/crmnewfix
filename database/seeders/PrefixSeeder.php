@@ -18,19 +18,25 @@ class PrefixSeeder extends Seeder
         $ins = [
             [
                 'prefix_field' => 'Product',
-                'prefix_value' => 'PD/2022/0000',
+                'prefix_value' => 'PD/2023/0000',
                 'status' => 1,
                 'company_id' => 1,
             ],
             [
                 'prefix_field' => 'Lead',
-                'prefix_value' => 'LD/2022/0000',
+                'prefix_value' => 'LD/2023/0000',
+                'company_id' => 1,
+                'status' => 1,
+            ],
+            [
+                'prefix_field' => 'Deal',
+                'prefix_value' => 'DL/2023/0000',
                 'company_id' => 1,
                 'status' => 1,
             ],
             [
                 'prefix_field' => 'Invoice',
-                'prefix_value' => 'INV/2022/0000',
+                'prefix_value' => 'INV/2023/0000',
                 'company_id' => 1,
                 'status' => 1,
             ]

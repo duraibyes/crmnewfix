@@ -33,7 +33,8 @@ class Lead extends Model implements Auditable
         'updated_by',
         'mobile_no',
         'email',
-        'city'
+        'city',
+        'lead_no'
     ];
 
     protected static function booted()
@@ -70,6 +71,7 @@ class Lead extends Model implements Auditable
         return  $query->where( function( $query ) use( $search ) {
                     $query->where( 'lead_title', 'like', "%{$search}%" )
                         ->orWhere( 'lead_subject', 'like', "%{$search}%" )
+                        ->orWhere( 'lead_no', 'like', "%{$search}%" )
                         ->orWhere( 'lead_description', 'like', "%{$search}%" )
                         ->orWhere( 'lead_value', 'like', "%{$search}%" )
                         ->orWhere( 'mobile_no', 'like', "%{$search}%" )

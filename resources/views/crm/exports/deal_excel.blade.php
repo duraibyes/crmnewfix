@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th>Deal No</th>
             <th>Deal Title</th>
             <th>Deal Description</th>
             <th>Deal Value</th>
@@ -21,6 +22,7 @@
         @if (isset($details) && !empty($details))
             @foreach ($details as $deal)
                 <tr>
+                    <td>{{ $deal->deal_no }}</td>
                     <td>{{ $deal->deal_title }}</td>
                     <td>{{ $deal->deal_description ?? '' }}</td>
                     <td>{{ $deal->deal_value ?? '' }}</td>

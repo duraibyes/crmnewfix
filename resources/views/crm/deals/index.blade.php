@@ -33,6 +33,7 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th> Title </th>
+                                        <th> Deal No </th>
                                         <th> Customer </th>
                                         <th> Expected Delivery </th>
                                         <th> Assigned To</th>
@@ -72,8 +73,12 @@
                         "_token": "<?= csrf_token() ?>"
                     }
                 },
-                "columns": [{
+                "columns": [
+                    {
                         "data": "title"
+                    },
+                    {
+                        "data": "deal_no"
                     },
                     {
                         "data": "customer"

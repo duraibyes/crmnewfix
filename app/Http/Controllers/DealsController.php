@@ -51,7 +51,7 @@ class DealsController extends Controller
             return response('Forbidden.', 403);
         }
 
-        $columns            = ['deal_title', 'customer_id', 'expected_completed_date', 'status', 'id'];
+        $columns            = ['deal_title', 'deal_no', 'customer_id', 'expected_completed_date', 'status', 'id'];
         $limit              = $request->input('length');
         $start              = $request->input('start');
         $order              = $columns[intval($request->input('order')[0]['column'])];
@@ -96,6 +96,7 @@ class DealsController extends Controller
                 }
 
                 $nested_data['title']             = $deals->deal_title ?? '';
+                $nested_data['deal_no']           = $deals->deal_no ?? '';
                 $nested_data['customer']          = $deals->customer->first_name ?? 'N/A';
                 $nested_data['expected_delivery'] = date('d M, Y', strtotime($deals->expected_completed_date));
                 $nested_data['assigned_to']         = $deals->assignedTo->name ?? 'All';
@@ -219,6 +220,10 @@ class DealsController extends Controller
                 if ($request->assigned_to) {
                     $ins['assinged_by'] = Auth::id();
                     $ins['assigned_to'] = $request->assigned_to;
+                } else {
+                    $assigned_to = CommonHelper::getDealAssigner();
+                    $ins['assigned_to'] = $assigned_to;
+                    $ins['assinged_by'] = Auth::id();
                 }
                 if ($request->organization_id) {
                     $cus = Customer::find($request->customer_id);
@@ -253,6 +258,7 @@ class DealsController extends Controller
                     $success = 'Updated Deal';
                 } else {
                     $ins['added_by'] = Auth::id();
+                    $ins['deal_no'] = CommonHelper::generateDealNo();
                     $id = Deal::create($ins)->id;
                     $success = 'Added new Deal';
                 }

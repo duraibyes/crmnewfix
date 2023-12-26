@@ -40,8 +40,8 @@ class LeadController extends Controller
             return response('Forbidden.', 403);
         }
 
-        $columns            = ['lead_subject', 'lead_type_id', 'lead_source_id', 'created_at', 'id', 'status', 'id'];
-
+        $columns            = ['lead_subject', 'customer_id', 'lead_no', 'lead_type_id', 'lead_source_id', 'created_at', 'assigned_to', 'status', 'id'];
+        $draw               = $request->input('draw');
         $limit              = $request->input('length');
         $start              = $request->input('start');
         $order              = $columns[intval($request->input('order')[0]['column'])];
@@ -49,17 +49,24 @@ class LeadController extends Controller
         $search             = $request->input('search.value');
 
         $total_list         = lead::access()->count();
-        // DB::enableQueryLog();
+ 
         if ($order != 'id') {
-            $list               = lead::skip($start)->take($limit)->orderBy($order, $dir)
-                ->search($search)->access()
-                ->get();
+            $list               =Lead::skip($start)
+                                    ->take($limit)
+                                    ->when($draw != 1, function ($q) use ($order, $dir) {
+                                        $q->orderBy($order, $dir);
+                                    })
+                                    ->search($search)
+                                    ->access()
+                                    ->when($draw == 1, function ($q) {
+                                        $q->latest('created_at');
+                                    })
+                                    ->get();
         } else {
             $list               = lead::skip($start)->take($limit)->Latests()
                 ->search($search)->access()
                 ->get();
         }
-        // $query = DB::getQueryLog();
         if (empty($request->input('search.value'))) {
             $total_filtered = lead::access()->count();
         } else {
@@ -99,6 +106,7 @@ class LeadController extends Controller
 
                 $nested_data['title']             = $leads->lead_title ?? $leads->lead_subject;
                 $nested_data['customer']          = $customer_data;
+                $nested_data['lead_no']           = $leads->lead_no ?? 'N/A';
                 $nested_data['type']              = $leads->leadType->type ?? 'N/A';
                 $nested_data['source']            = $leads->leadSource->source ?? 'N/A';
                 $nested_data['created_at']        = date('d-m-Y', strtotime($leads->created_at));
@@ -416,7 +424,7 @@ class LeadController extends Controller
                     $ins['assigned_to'] = $request->assigned_to;
                 } else {
                     $assigned_to = CommonHelper::getLeadAssigner();
-                    $ins['assigned_to'] = $request->assigned_to;
+                    $ins['assigned_to'] = $assigned_to;
                     $ins['assinged_by'] = Auth::id();
                 }
                 if ($request->organization_id) {
@@ -452,6 +460,7 @@ class LeadController extends Controller
                         }
                     }
                     $ins['added_by'] = Auth::id();
+                    $ins['lead_no'] = CommonHelper::generateLeadNo();
                     $lead_id = Lead::create($ins)->id;
                     $success = 'Added new Lead';
                 }

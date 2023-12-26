@@ -36,7 +36,8 @@ class Deal extends Model implements Auditable
         'loss_at',
         'mobile_no',
         'email',
-        'city'
+        'city',
+        'deal_no'
     ];
 
     protected static function booted()
@@ -59,6 +60,7 @@ class Deal extends Model implements Auditable
         return  $query->where(function ($query) use ($search) {
             $query->where('deal_title', 'like', "%{$search}%")
                 ->orWhere('deal_description', 'like', "%{$search}%")
+                ->orWhere('deal_no', 'like', "%{$search}%")
                 ->orWhere('deal_value', 'like', "%{$search}%")
                 ->orWhere('expected_completed_date', 'like', "%{$search}%")
                 ->orWhere('stage_status', 'like', "%{$search}%");

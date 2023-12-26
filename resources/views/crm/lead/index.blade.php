@@ -36,6 +36,7 @@
                                     <tr>
                                         <th class="all">Title</th>
                                         <th>Customer</th>
+                                        <th>Lead No</th>
                                         <th>Lead Type</th>
                                         <th>Lead Source</th>
                                         <th>Lead Created</th>
@@ -58,9 +59,9 @@
     <!-- third party js -->
     <script src="{{ asset('assets/js/vendor/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/dataTables.checkboxes.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/vendor/dataTables.responsive.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/vendor/responsive.bootstrap5.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/vendor/dataTables.checkboxes.min.js') }}"></script> --}}
     {{-- <script src="{{ asset('assets/js/pages/demo.products.js') }}"></script> --}}
     <script>
         $(document).ready(function() {
@@ -78,11 +79,16 @@
                         "_token": "<?= csrf_token() ?>"
                     }
                 },
-                "columns": [{
+                "columns": [
+                   
+                    {
                         "data": "title"
                     },
                     {
                         "data": "customer"
+                    },
+                    {
+                        "data": "lead_no"
                     },
                     {
                         "data": "type"

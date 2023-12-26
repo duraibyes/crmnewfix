@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th>Lead No</th>
             <th>Lead Title</th>
             <th>Lead Description</th>
             <th>Lead Value</th>
@@ -22,6 +23,7 @@
         @if (isset($details) && !empty($details))
             @foreach ($details as $lead)
                 <tr>
+                    <td>{{ $lead->lead_no }}</td>
                     <td>{{ $lead->lead_subject }}</td>
                     <td>{{ $lead->lead_description ?? '' }}</td>
                     <td>{{ $lead->lead_value ?? '' }}</td>

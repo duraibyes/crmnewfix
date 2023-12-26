@@ -36,7 +36,7 @@ class CommonHelper
 
     public static function get_product_code()
     {
-        $prefix = PrefixSetting::where('prefix_field', 'Product')->first();
+        $prefix = PrefixSetting::where('prefix_field', 'Product'->where('company_id', auth()->user()->company_id))->first();
         $prefix_value = $prefix->prefix_value;
 
         $exp = explode('/', $prefix_value);
@@ -53,7 +53,7 @@ class CommonHelper
         $exp[] = $length;
         $product_code = implode('/', $exp);
 
-        $product_info = Product::orderBy('product_code', 'desc')->first();
+        $product_info = Product::orderBy('product_code', 'desc')->where('company_id', auth()->user()->company_id)->first();
         if (isset($product_info)) {
             if (str_contains($product_info->product_code, $str)) {
                 $prefix_value = $product_info->product_code;
@@ -77,7 +77,7 @@ class CommonHelper
 
     public static function get_invoice_code()
     {
-        $prefix = PrefixSetting::where('prefix_field', 'Invoice')->first();
+        $prefix = PrefixSetting::where('prefix_field', 'Invoice')->where('company_id', auth()->user()->company_id)->first();
         $prefix_value = $prefix->prefix_value;
 
         $exp = explode('/', $prefix_value);
@@ -93,7 +93,7 @@ class CommonHelper
         $length = $length . $num;
         $exp[] = $length;
         $invoice_no = implode('/', $exp);
-        $invoice_info = Invoice::orderBy('invoice_no', 'desc')->first();
+        $invoice_info = Invoice::where('company_id', auth()->user()->company_id)->orderBy('invoice_no', 'desc')->first();
         if (isset($invoice_info)) {
             if (str_contains($invoice_info->invoice_no, $str)) {
                 $prefix_value = $invoice_info->invoice_no;
@@ -112,6 +112,87 @@ class CommonHelper
             }
         }
         return $invoice_no;
+    }
+
+    public static function generateLeadNo()
+    {
+        $prefix = PrefixSetting::where('prefix_field', 'Lead')->where('company_id', auth()->user()->company_id)->first();
+        $prefix_value = $prefix->prefix_value;
+
+        $exp = explode('/', $prefix_value);
+        $str = $exp[0];
+        $num = end($exp);
+        array_pop($exp);
+        $num = $num + 1;
+        $length = '';
+        if (strlen($num) < 4) {
+            $length  = 4 - strlen($num);
+            $length = str_repeat('0', $length);
+        }
+        $length = $length . $num;
+        $exp[] = $length;
+        $lead_no = implode('/', $exp);
+        $lead_info = Lead::where('company_id', auth()->user()->company_id)->orderBy('lead_no', 'desc')->first();
+        if (isset($lead_info)) {
+            if (str_contains($lead_info->lead_no, $str)) {
+                $prefix_value = $lead_info->lead_no;
+                $exp = explode('/', $prefix_value);
+                $num = end($exp);
+                array_pop($exp);
+                $num = $num + 1;
+                $length = '';
+                if (strlen($num) < 4) {
+                    $length  = 4 - strlen($num);
+                    $length = str_repeat('0', $length);
+                }
+                $length = $length . $num;
+                $exp[] = $length;
+                $lead_no = implode('/', $exp);
+            }
+        }
+        return $lead_no;
+    }
+
+    public static function generateDealNo()
+    {
+        $prefix = PrefixSetting::where('prefix_field', 'Deal')->where('company_id', auth()->user()->company_id)->first();
+        if( $prefix ) {
+            $prefix_value = $prefix->prefix_value;
+    
+            $exp = explode('/', $prefix_value);
+            $str = $exp[0];
+            $num = end($exp);
+            array_pop($exp);
+            $num = $num + 1;
+            $length = '';
+            if (strlen($num) < 4) {
+                $length  = 4 - strlen($num);
+                $length = str_repeat('0', $length);
+            }
+            $length = $length . $num;
+            $exp[] = $length;
+            $deal_no = implode('/', $exp);
+            $deal_info = Deal::where('company_id', auth()->user()->company_id)->orderBy('deal_no', 'desc')->first();
+            if (isset($deal_info)) {
+                if (str_contains($deal_info->deal_no, $str)) {
+                    $prefix_value = $deal_info->deal_no;
+                    $exp = explode('/', $prefix_value);
+                    $num = end($exp);
+                    array_pop($exp);
+                    $num = $num + 1;
+                    $length = '';
+                    if (strlen($num) < 4) {
+                        $length  = 4 - strlen($num);
+                        $length = str_repeat('0', $length);
+                    }
+                    $length = $length . $num;
+                    $exp[] = $length;
+                    $deal_no = implode('/', $exp);
+                }
+            }
+            return $deal_no;
+        }
+        return null;
     }
 
     public static function setMailConfig()
@@ -242,7 +323,7 @@ class CommonHelper
                     $user_id = $get_user->user_id;
                 } else {
                     if ($count > 0) {
-                        $get_user = DB::table('lead_orders')->where('order', $order_no)->where('company_id', $set_info->id)->first();
+                        $get_user = DB::table('lead_orders')->orderBy('order', 'asc')->where('company_id', $set_info->id)->first();
                         if (isset($get_user) && !empty($get_user)) {
                             $user_id = $get_user->user_id;
                         }
@@ -258,6 +339,44 @@ class CommonHelper
         }
         if (!empty($user_id)) {
             DB::table('company_settings')->where('id', auth()->user()->company_id)->update(['last_lead_order' => $get_user->order ?? null]);
+            return $user_id;
+        }
+        return null;
+    }
+
+    public static function getDealAssigner()
+    {
+        if( isset(auth()->user()->company_id ) ) {
+            $set_info       = DB::table('company_settings')->where('id', auth()->user()->company_id)->first();
+        } else {
+            $set_info       = DB::table('company_settings')->where('site_code', request()->segment(1))->first();
+        }
+        $user_id            = '';
+        if (isset($set_info) && !empty($set_info) && $set_info->deal_access == 'roundrobin') {
+            if (isset($set_info->last_deal_order) && !empty($set_info->last_deal_order)) {
+                $order_no = $set_info->last_deal_order;
+                $count = DB::table('deal_orders')->where('company_id', $set_info->id)->count();
+                $get_user = DB::table('deal_orders')->where('order', '>', $order_no)->where('company_id', $set_info->id)->orderBy('order')->first();
+                if (isset($get_user) && !empty($get_user)) {
+                    $user_id = $get_user->user_id;
+                } else {
+                    if ($count > 0) {
+                        $get_user = DB::table('deal_orders')->orderBy('order', 'asc')->where('company_id', $set_info->id)->first();
+                        if (isset($get_user) && !empty($get_user)) {
+                            $user_id = $get_user->user_id;
+                        }
+                    }
+                }
+            } else {
+                $get_user = DB::table('deal_orders')->orderBy('order')->where('company_id', $set_info->id)->first();
+
+                if (isset($get_user) && !empty($get_user)) {
+                    $user_id = $get_user->user_id;
+                }
+            }
+        }
+        if (!empty($user_id)) {
+            DB::table('company_settings')->where('id', auth()->user()->company_id)->update(['last_deal_order' => $get_user->order ?? null]);
             return $user_id;
         }
         return null;

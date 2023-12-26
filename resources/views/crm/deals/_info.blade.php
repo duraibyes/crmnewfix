@@ -8,7 +8,10 @@
     </style>
     
     <div class="col-md-6 mb-3">
-       <h3 class="h4 link"><a href="#" class="me-1">{{ $info->deal_title ?? '' }}</a> <i class="mdi mdi-tag"></i></h3>
+       <h3 class="h4 link">
+        <a href="#" class="me-1">{{ $info->deal_title ?? '' }}</a> 
+        <span class="text-success">{{$info->deal_no ?? ''}}</span>
+        <i class="mdi mdi-tag"></i></h3>
         <div class="d-flex">
             <div class="btn ps-0"><b class="h4">{{ $info->deal_currency ?? '' }} {{ $info->deal_value ?? '' }}</b></div>
             <div class="btn link">{{ isset($info->deal_products) ? count($info->deal_products) : '0'; }} Products</div>

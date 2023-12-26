@@ -41,9 +41,13 @@ class ImportCustomer implements ToModel, WithStartRow
     
                 $lea['customer_id'] = $customer_info->id;
                 $lea['status'] = 1;
+                $lea['lead_no'] = CommonHelper::generateLeadNo();
                 $lea['added_by'] = 1;
+                $lea['mobile_no'] = $row[3] ?? '';
+                $lea['email'] = $row[2] ?? '';
+                $lea['city'] = $row[4] ?? '';
                 $lea['lead_subject'] = $row[5] ?? 'Excel Import';
-                $lea['lead_description'] = $row[6] ?? 'Manual Import from portal';
+                // $lea['lead_description'] = $row[6] ?? 'Manual Import from portal';
                 $lead_id = Lead::create($lea)->id;
                 //insert in notification
                 CommonHelper::send_lead_notification($lead_id, $assigned_to, '', '', auth()->user()->company->site_code ?? '' );

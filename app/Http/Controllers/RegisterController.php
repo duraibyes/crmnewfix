@@ -102,6 +102,12 @@ class RegisterController extends Controller
                 'status' => 1,
             ],
             [
+                'prefix_field' => 'Deal',
+                'prefix_value' => $prefix.'DL/'.date('Y').'/0000',
+                'company_id' => $info->id,
+                'status' => 1,
+            ],
+            [
                 'prefix_field' => 'Invoice',
                 'prefix_value' => $prefix.'INV/'.date('Y').'/0000',
                 'company_id' => $info->id,
