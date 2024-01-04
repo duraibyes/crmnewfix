@@ -376,13 +376,13 @@ class LeadController extends Controller
     {
         $id = $request->id;
         $role_validator   = [
-            'customer'      => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'max:255'],
             'mobile_no'      => ['required', 'string', 'max:255'],
             'city'      => ['required', 'string', 'max:255'],
             'title'      => ['required', 'string', 'max:255'],
             'lead_type'      => ['required', 'string', 'max:255'],
             'lead_source'      => ['required', 'string', 'max:255'],
+            'customer'      => ['required', 'string', 'max:255'],
         ];
         //Validate the product
         $validator                     = Validator::make($request->all(), $role_validator);
@@ -396,8 +396,9 @@ class LeadController extends Controller
                 } else {
                     $customer_info = Customer::where(['first_name' => $request->customer, 'email' => $request->email, 'mobile_no' => $request->mobile_no])->first();
                     if( $customer_info ) {
-                        $customer_info->city = $request->city;
+                        $customer_info->address = $request->city;
                         $customer_info->save();
+                        $customer_id = $customer_info->id;
                     } else {
                         $cus['first_name'] = $request->customer;
                         $cus['email'] = $request->email;
@@ -407,6 +408,12 @@ class LeadController extends Controller
 
                         $customer_id = Customer::create($cus)->id;
                     }
+                }
+
+                $lead_details = Lead::where(['customer_id' => $customer_id])->first();
+                
+                if ($lead_details && !$id) {
+                    return response()->json(['error' => ['Lead already exist for this customer. You cannot create another one.'], 'status' => '1']);
                 }
 
                 $ins['status'] = isset($request->status) ? 1 : 0;
@@ -450,7 +457,7 @@ class LeadController extends Controller
                     $lead->update();
                     $lead_id = $id;
                     $success = 'Updated Lead';
-                } else {
+                } else { 
                     if ($request->assigned_to) {
                         $assigned_info = User::find($request->assigned_to);
                         $limit = $assigned_info->lead_limit ?? 1;
@@ -461,10 +468,16 @@ class LeadController extends Controller
                     }
                     $ins['added_by'] = Auth::id();
                     $ins['lead_no'] = CommonHelper::generateLeadNo();
-                    $lead_id = Lead::create($ins)->id;
+
+                     //CHECK LEAD IS ALREADY EXIST
+                    $lead_details = Lead::where(['customer_id' => $customer_id])->first();
+                    // dd( $lead_details );
+                    if (!$lead_details) {
+                        $lead_id = Lead::create($ins)->id;
+                        CommonHelper::send_lead_notification($lead_id, $assigned_to, '', $id, $this->companyCode);
+                    }
                     $success = 'Added new Lead';
                 }
-                CommonHelper::send_lead_notification($lead_id, $assigned_to, '', $id, $this->companyCode);
             } else {
                 $success = 'You have reached daily limit.';
                 return response()->json(['error' => [$success], 'status' => '1']);

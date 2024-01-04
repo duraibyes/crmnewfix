@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use CommonHelper;
 use App\Models\Lead;
+use App\Models\LeadType;
+use App\Models\LeadSource;
 
 
 class ImportCustomer implements ToModel, WithStartRow
@@ -47,8 +49,37 @@ class ImportCustomer implements ToModel, WithStartRow
                 $lea['email'] = $row[2] ?? '';
                 $lea['city'] = $row[4] ?? '';
                 $lea['lead_subject'] = $row[5] ?? 'Excel Import';
-                // $lea['lead_description'] = $row[6] ?? 'Manual Import from portal';
-                $lead_id = Lead::create($lea)->id;
+                $lead_type = $row[5] ?? '';
+                $lead_source = $row[6] ?? '';
+                if ($lead_type) {
+                    $leadTypeInfo = LeadType::where('type', $lead_type)->where('company_id', auth()->user()->company_id)->first();
+                    if ( $leadTypeInfo ) {
+                        $lead_type_id = $leadTypeInfo->id;
+                    } else {
+                        $tins['status'] = 1;
+                        $tins['type'] = $lead_type;
+                        $tins['added_by'] = Auth::id();
+                        $lead_type_id = LeadType::create($tins)->id;
+                    }
+                }
+                if ($lead_source) {
+                    $leadSourceInfo = LeadSource::where('source', $lead_source)->where('company_id', auth()->user()->company_id)->first();
+                    if ($leadSourceInfo) {
+                        $lead_source_id = $leadSourceInfo->id;
+                    } else {
+                        $tins['status'] = 1;
+                        $tins['source'] = $lead_type;
+                        $tins['added_by'] = Auth::id();
+                        $lead_source_id = LeadSource::create($tins)->id;
+                    }
+                }
+                $lea['lead_type_id'] = $lead_type_id ?? null;
+                $lea['lead_source_id'] = $lead_source_id ?? null;
+                //CHECK LEAD IS ALREADY EXIST
+                $lead_details = Lead::where(['customer_id' => $customer_info->id])->first();
+                if (!$lead_details) {
+                    $lead_id = Lead::create($lea)->id;
+                }
                 //insert in notification
                 CommonHelper::send_lead_notification($lead_id, $assigned_to, '', '', auth()->user()->company->site_code ?? '' );
             }

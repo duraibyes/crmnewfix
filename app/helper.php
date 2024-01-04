@@ -136,24 +136,38 @@ function sendWhatsappApi($mobile_no, $type, $params, $from, $media_url = '', $fi
         } else if( $from == 'media' ) {
             $message = $params;
         }
-    
         $api_type = 'text';
         if( $access_token && $instance_id ) {
 
             if( $from != 'media') {
                 $http_query = "http://wase.co.in/api/send.php?number=$mobile_no&type=$api_type&message=$message&instance_id=$instance_id&access_token=$access_token";
                 Log::info($http_query);
-                $response = Http::get($http_query);
-                Log::info($response);
+                try {
+                    $response = Http::get($http_query);
+                    Log::info($response);
+                } catch(Exception $e) {
+                    Log::info($e->getMessage());
+                }
 
             } else {
                 $http_query = "http://wase.co.in/api/send.php?number=$mobile_no&type=text&message=$message&instance_id=$instance_id&access_token=$access_token";
-                Log::info($http_query);
-                $response = Http::get($http_query);
+                try {
+
+                    Log::info($http_query);
+                    $response = Http::get($http_query);
+                }
+                catch(Exception $e) {
+                    Log::info($e->getMessage());
+                }
                 $http_query = "http://wase.co.in/api/send.php?number=$mobile_no&type=media&message=$message&media_url=$media_url&filename=$filename&instance_id=$instance_id&access_token=$access_token";
                 Log::info($http_query);
-                $response = Http::get($http_query);
-                Log::info($response);
+                try {
+                    $response = Http::get($http_query);
+                    Log::info($response);
+                } 
+                catch(Exception $e) {
+                    Log::info( $e->getMessage());
+                }
             }
             
             return true;

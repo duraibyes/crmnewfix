@@ -37,7 +37,7 @@
                                         <th class="all">Title</th>
                                         <th>Customer</th>
                                         <th>Lead No</th>
-                                        <th>Lead Type</th>
+                                        <th>Lead Stage</th>
                                         <th>Lead Source</th>
                                         <th>Lead Created</th>
                                         <th> Assigned To</th>

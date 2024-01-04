@@ -117,6 +117,7 @@ class LandingController extends Controller
             $lea['added_by'] = 1;
             $lea['lead_subject'] = $request->subject;
             $lea['lead_description'] = $request->message;
+            $lea['lead_no'] = CommonHelper::generateLeadNo();
             $lead_id = Lead::create($lea)->id;
             //insert in notification
             CommonHelper::send_lead_notification($lead_id, $assigned_to, '', '', $this->companyCode );
