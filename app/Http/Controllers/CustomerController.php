@@ -127,7 +127,7 @@ class CustomerController extends Controller
             return response('Forbidden.', 403);
         }
         $query              = $request->org;
-        $list               = Organization::search($query)
+        $list               = Organization::where('company_id', auth()->user()->company_id)->search($query)
             ->get();
         $params['list']     = $list;
         $params['query']    = $query;
@@ -273,7 +273,7 @@ class CustomerController extends Controller
         }
         $query              = $request->org;
         $type               = $request->type;
-        $list               = Customer::search($query)
+        $list               = Customer::where('company_id', auth()->user()->company_id)->search($query)
             ->get();
         $params['list']     = $list;
         $params['query']    = $query;

@@ -122,7 +122,7 @@ class CountryController extends Controller
                     'string',
                     'max:255',
                     Rule::unique('countries', 'country_name')->where(function ($query) use ($company_id, $id) {
-                        return $query->where('company_id', $company_id)->where('id', '<>', $id);
+                        return $query->where('company_id', $company_id)->where('id', '<>', $id)->whereNull('deleted_at');
                     }),
                 ],
             ];
@@ -133,7 +133,7 @@ class CountryController extends Controller
                     'string',
                     'max:255',
                     Rule::unique('countries', 'country_name')->where(function ($query) use ($company_id) {
-                        return $query->where('company_id', $company_id);
+                        return $query->where('company_id', $company_id)->whereNull('deleted_at');
                     }),
                 ],
             ];

@@ -36,7 +36,7 @@ class CommonHelper
 
     public static function get_product_code()
     {
-        $prefix = PrefixSetting::where('prefix_field', 'Product'->where('company_id', auth()->user()->company_id))->first();
+        $prefix = PrefixSetting::where('prefix_field', 'Product')->where('company_id', auth()->user()->company_id)->first();
         $prefix_value = $prefix->prefix_value;
 
         $exp = explode('/', $prefix_value);
