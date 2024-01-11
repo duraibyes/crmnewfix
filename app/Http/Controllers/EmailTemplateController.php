@@ -9,7 +9,7 @@ use App\Mail\TestEmail;
 use CommonHelper;
 use Mail;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Validation\Rule;
 
 class EmailTemplateController extends Controller
 {
@@ -23,7 +23,7 @@ class EmailTemplateController extends Controller
     public function index()
     {
         $data   = EmailTemplates::paginate(10);
-        $email_count = EmailTemplates::count();
+        $email_count = EmailTemplates::where('id', auth()->user()->company_id)->count();
         return view('crm.utilities.email_template.index', compact('data', 'email_count'));
     }
 
@@ -37,7 +37,14 @@ class EmailTemplateController extends Controller
     {
         $valid   = [
             'title'      => ['required', 'string', 'max:255'],
-            'email_type' => ['required', 'string', 'max:255', 'unique:email_templates,email_type'],
+            'email_type' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('email_templates', 'email_type')->where(function ($query) {
+                    return $query->where('company_id',  auth()->user()->company_id);
+                }),
+            ],
             'content' => ['required']
         ];
 
@@ -51,8 +58,9 @@ class EmailTemplateController extends Controller
                 'subject' => $request->subject,
                 'content' => $request->content,
                 'created_by' => Auth()->user()->name,
+                'status' => 1
             ]);
-            return redirect()->route('email.index', $this->companyCode)->with('success', 'Mail Created successfully!');
+            return redirect()->route('email.index', $this->companyCode)->with('success', 'Mail Template Created successfully!');
         } else {
             return back()->withErrors($validator);
         }
@@ -102,7 +110,7 @@ class EmailTemplateController extends Controller
                 'content' => $request->content,
                 'created_by' => Auth()->user()->name,
             ]);
-            return redirect()->route('email.index', $this->companyCode)->with('success', 'Mail Updated successfully!');
+            return redirect()->route('email.index', $this->companyCode)->with('success', 'Mail Template Updated successfully!');
         } else {
             return back()->withErrors($validator);
         }
