@@ -49,8 +49,8 @@ class ImportCustomer implements ToModel, WithStartRow
                 $lea['email'] = $row[2] ?? '';
                 $lea['city'] = $row[4] ?? '';
                 $lea['lead_subject'] = $row[5] ?? 'Excel Import';
-                $lead_type = $row[5] ?? '';
-                $lead_source = $row[6] ?? '';
+                $lead_type = $row[6] ?? '';
+                $lead_source = $row[7] ?? '';
                 if ($lead_type) {
                     $leadTypeInfo = LeadType::where('type', $lead_type)->where('company_id', auth()->user()->company_id)->first();
                     if ( $leadTypeInfo ) {
@@ -63,7 +63,10 @@ class ImportCustomer implements ToModel, WithStartRow
                     }
                 }
                 if ($lead_source) {
+                    // \DB::enableQueryLog();
                     $leadSourceInfo = LeadSource::where('source', $lead_source)->where('company_id', auth()->user()->company_id)->first();
+                    // dd( \DB::getQueryLog());
+                    // dd( $leadSourceInfo );
                     if ($leadSourceInfo) {
                         $lead_source_id = $leadSourceInfo->id;
                     } else {
@@ -79,9 +82,9 @@ class ImportCustomer implements ToModel, WithStartRow
                 $lead_details = Lead::where(['customer_id' => $customer_info->id])->first();
                 if (!$lead_details) {
                     $lead_id = Lead::create($lea)->id;
+                    //insert in notification
+                    CommonHelper::send_lead_notification($lead_id, $assigned_to, '', '', auth()->user()->company->site_code ?? '' );
                 }
-                //insert in notification
-                CommonHelper::send_lead_notification($lead_id, $assigned_to, '', '', auth()->user()->company->site_code ?? '' );
             }
 
         }
