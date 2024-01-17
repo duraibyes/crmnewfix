@@ -4,7 +4,7 @@
 @endphp
 <head>
     <meta charset="utf-8" />
-    @if ($result)
+    @if (isset($result) && !empty($result))
         <title>{{ $result->page_title }}</title>
         <link rel="shortcut icon" href="{{ asset('storage/' . $result->page_logo) }}">
     @endif
@@ -240,7 +240,7 @@
     .announcement-pane {
         position: absolute;
         top: 0;
-        background: linear-gradient(358deg, {{ $result->primary_color }}, {{ $result->primary_color }});
+        background: linear-gradient(358deg, {{ $result->primary_color ?? 'fff' }}, {{ $result->primary_color ?? 'fff' }});
         width: 100%;
         height: 10%;
         text-align: center;

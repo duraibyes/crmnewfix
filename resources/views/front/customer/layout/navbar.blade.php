@@ -2,7 +2,7 @@
     <div class="container">
         <!-- logo -->
         <a href="#contact-us" class="navbar-brand me-lg-5 ">
-            <img src="{{ $result->page_logo }}" alt="{{ $result->page_title }}" class="logo-dark"
+            <img src="{{ $result->page_logo ?? '' }}" alt="{{ $result->page_title ?? '' }}" class="logo-dark"
                 height="60" />
         </a>
 

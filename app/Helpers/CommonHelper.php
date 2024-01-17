@@ -218,6 +218,24 @@ class CommonHelper
         config(['mail.mailers.smtp' => $mailConfig]);
     }
 
+    public static function setMailMainConfig()
+    {
+        $settings       = DB::table('company_settings')->where('is_owner', 1)->first();
+        //Get the data from settings table
+        //Set the data in an array variable from settings table
+        $mailConfig = [
+            'transport' => $settings->mailer,
+            'host' => $settings->smtp_host,
+            'port' => $settings->smtp_port,
+            'encryption' => $settings->mail_encryption,
+            'username' => $settings->smtp_user,
+            'password' => $settings->smtp_password,
+            'timeout' => null
+        ];
+        //To set configuration values at runtime, pass an array to the config helper
+        config(['mail.mailers.smtp' => $mailConfig]);
+    }
+
     public static function set_lead_order($user_id, $role_id, $type)
     {
         $check = DB::table('lead_orders')->where('company_id', auth()->user()->company_id)->where('user_id', $user_id)->where('status', 1)->first();

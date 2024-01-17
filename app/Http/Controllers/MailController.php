@@ -13,11 +13,11 @@ use DB;
 
 class MailController extends Controller
 {
-    public function sendMail()
+    public function sendMailOld()
     {
         try {
             //Set mail configuration
-            CommonHelper::setMailConfig();
+            CommonHelper::setMailMainConfig();
 
             $data   = EmailTemplates::where('email_type', 'new_registration')->first();
             $extract = array(
@@ -46,6 +46,32 @@ class MailController extends Controller
 
             Mail::send('emails.test', $body, function ($message) {
                 $message->to('duraibytes@gmail.com', 'Tutorials Point')->subject('Laravel Basic Testing Mail');
+                $message->from('durairajnet@gmail.com', 'Durai bytes');
+                // $message->attach($media_url);
+            });
+            echo 'Test email sent successfully';
+            // return redirect()->back()->with('success', 'Test email sent successfully');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            // return redirect()->back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function sendMail()
+    {
+        try {
+            //Set mail configuration
+            CommonHelper::setMailMainConfig();
+
+            $body = [
+                'login_url' => 'https://crm.phoenixtech.app/PX-ALG202308/devlogin',
+                'customer_name' => 'Durai raj',
+                'user_name' => 'test@yopmail.com',
+                'password' => '12345678',
+            ];
+
+            Mail::send('emails.welcome', $body, function ($message) {
+                $message->to('duraibytes@gmail.com', 'Tutorials Point')->subject('Welcome to Phoenix CRM - Complete Your Registration!');
                 $message->from('durairajnet@gmail.com', 'Durai bytes');
                 // $message->attach($media_url);
             });

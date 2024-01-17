@@ -16,7 +16,7 @@ class LoginController extends Controller
 
     public function __construct(Request $request)
     {
-        $this->companyCode = $request->segment(1);
+        $this->companyCode = $request->segment(1) ?? '';
     }
 
     public function index(Request $request) {
@@ -25,8 +25,9 @@ class LoginController extends Controller
         if (!$result) {
             $result   = LandingPages::latest()->first();
         }
+        $globalLogin = $result ? false : true;
         $not_home = 'auth';
-        return view('front.auth.login', compact('result', 'not_home'));
+        return view('front.auth.login', compact('result', 'not_home', 'globalLogin'));
 
     }
 

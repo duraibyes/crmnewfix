@@ -23,8 +23,10 @@ class CompanyScope implements Scope
             $company_id = auth()->user()->company_id;
         } else {
             $company = DB::table('company_settings')->where('site_code', request()->segment(1))->first();
-            $company_id = $company->id;
+            $company_id = $company->id ?? null;
         }
-        $builder->where('company_id', $company_id);
+        if ($company_id) {
+            $builder->where('company_id', $company_id);
+        }
     }
 }

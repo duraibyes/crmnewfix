@@ -127,7 +127,7 @@
             @else 
         
             <li class="nav-item me-0 ms-3">
-                <a href="{{ route('customer-login', $companyCode) }}" target="_blank" class="btn btn-sm btn-primary rounded-pill d-none d-lg-inline-flex" style="font-size: var(--bs-body-font-size) !important;"> 
+                <a href="{{ route('customer-login', $companyCode ?? '') }}" target="_blank" class="btn btn-sm btn-primary rounded-pill d-none d-lg-inline-flex" style="font-size: var(--bs-body-font-size) !important;"> 
                     <i class="mdi mdi-login-variant"></i> &nbsp; Login
                 </a>
             </li>

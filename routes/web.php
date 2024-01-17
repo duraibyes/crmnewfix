@@ -13,8 +13,10 @@ use App\Http\Middleware\SetViewVariable;
 | 
 */
 //customer login routes
-Route::get('/', [App\Http\Controllers\RegisterController::class, 'companyNotFound'])->name('company-not-found')->middleware('checkCompany');
+Route::get('/login', [App\Http\Controllers\front\Auth\GlobalLoginController::class, 'globalLogin'])->name('global-login');
+Route::post('/verifyGlobalLogin', [App\Http\Controllers\front\Auth\GlobalLoginController::class, 'verifyGlobalLogin'])->name('verify-global-login');
 
+Route::get('/', [App\Http\Controllers\RegisterController::class, 'companyNotFound'])->name('company-not-found')->middleware('checkCompany');
 Route::get('/company/notfound', [App\Http\Controllers\RegisterController::class, 'companyNotFound'])->name('company-not-found');
 Route::get('/subscription/notfound', [App\Http\Controllers\RegisterController::class, 'subscriptionNotFound'])->name('subscription-not-found');
 Route::get('/register', [App\Http\Controllers\RegisterController::class, 'registerForm'])->name('register');
