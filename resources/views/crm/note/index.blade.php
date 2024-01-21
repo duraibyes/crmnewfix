@@ -94,8 +94,12 @@
     });
 
     function ReloadDataTableModal(id) {
-        var roletable = $('#'+id).DataTable();
-        roletable.ajax.reload();
+        var roletable = $('#' + id).DataTable();
+        var currentPage = roletable.page();
+        roletable.ajax.reload(function() {
+            // After the reload, set the DataTable back to the previous page
+            roletable.page(currentPage).draw('page');
+        });
     }
 
     </script>

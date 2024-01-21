@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendMailJob;
 use App\Mail\TestEmail;
+use App\Mail\WelcomeEmail;
 use App\Models\EmailTemplates;
 use DB;
 
@@ -71,10 +72,13 @@ class MailController extends Controller
             ];
 
             Mail::send('emails.welcome', $body, function ($message) {
-                $message->to('duraibytes@gmail.com', 'Tutorials Point')->subject('Welcome to Phoenix CRM - Complete Your Registration!');
-                $message->from('durairajnet@gmail.com', 'Durai bytes');
+                $message->to('duraibytes@gmail.com', 'Durairaj')->subject('Welcome to Phoenix CRM - Complete Your Registration!');
+                $message->from('phoenixtechnologies2022@gmail.com', 'PhoenixTech HelpDesk');
                 // $message->attach($media_url);
             });
+
+            // $send_mail = new WelcomeEmail($body['user_name'], $body['customer_name'], $body['login_url'], $body['password']);
+            // return $send_mail->render();
             echo 'Test email sent successfully';
             // return redirect()->back()->with('success', 'Test email sent successfully');
         } catch (\Exception $e) {
